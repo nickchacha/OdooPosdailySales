@@ -50,9 +50,9 @@
         </record>
 
         <record id="action_report_pos__daily_order_all" model="ir.actions.act_window">
-            <field name="res_model">report.pos.dailyorder</field>
             <field name="name">Daily Order Report</field>
-            <field name="view_type">pivot,graph</field>
+            <field name="res_model">report.pos.dailyorder</field>
+            <field name="view_mode">pivot,graph</field>
         </record>
 
 
