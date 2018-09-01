@@ -1,35 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="view_report_pos_dairyorder" model="ir.ui.view">
-            <field name="name">report.pos.dairyorder.tree</field>
-            <field name="model">report.pos.dairyorder</field>
+        <record id="view_report_pos_daily_order_pivot" model="ir.ui.view">
+            <field name="name">report.pos.dailyorder.pivot</field>
+            <field name="model">report.pos.dailyorder</field>
             <field name="arch" type="xml">
-                <tree string="Tree Dairy Sales Analysis" disable_linking="True">
+                <pivot string="Daily Order Analysis">
                     <field name="product_categ_id" type="row"/>
                     <field name="date" interval="month" type="col"/>
-                    <field name="order_id" />
-                    <field name="product_id" />
                     <field name="product_qty"  type="measure"/>
-                    <field name="unit_price" />
-                    <field name="total_discount"/>
-                    <field name="price_sub_total" />
-
-                    <field name="price_total" type="measure"/>
-                </tree>
+                </pivot>
             </field>
         </record>
-  
+        <record id="view_report_pos_daily_order_graph" model="ir.ui.view">
+            <field name="name">report.pos.dailyorder.graph</field>
+            <field name="model">report.pos.dailyorder</field>
+            <field name="arch" type="xml">
+                <graph string="Daily Order Analysis">
+                    <field name="date" type="row" />
+                    <field name="product_qty" type="measure" />
+                </graph>
+            </field>
+        </record>
+        <record id="view_report_pos_daily_order_graph" model="ir.ui.view">
+            <field name="name">report.pos.dailyorder.search</field>
+            <field name="model">report.pos.dailyorder</field>
+            <field name="arch" type="xml">
+                <search string="Daily Order Analysis">
+                    <field name="date"/>
+                    <filter string="Invoiced" domain="[('state','=',('invoiced'))]"/>
+                    <filter string="Not Invoiced" domain="[('state','=',('paid'))]"/>
+                    <separator/>
+                    <filter string="Year" name="year" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]" help="POS orders created during the current year"/>
+                    <separator/>
+                    <filter string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
+                    <field name="config_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="product_id"/>
+                    <field name="product_categ_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
+                        <filter string="Product Category" context="{'group_by':'product_categ_id'}"/>
+                        <filter string="Product" context="{'group_by':'product_id'}"/>
+                        <separator/>
+                        <filter string="Order Month" context="{'group_by':'date:month'}" help="Month of order date"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
-        <record id="action_report_pos_order_all" model="ir.actions.act_window">
+        <record id="action_report_pos__daily_order_all" model="ir.actions.act_window">
+            <field name="res_model">report.pos.dailyorder</field>
             <field name="name">Daily Order Report</field>
-            <field name="res_model">report.pos.dairyorder</field>
-            <field name="view_type">form,tree</field>
-            <field name="search_view_id" ref="view_report_pos_order_search"/>
-            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="res_model">report.pos.dailyorder</field>
+            <field name="view_type">pivot,graph</field>
         </record>
 
 
-        <menuitem id="menu_report_pos_dairy_order" name="Dairy Sales Report" action="action_report_pos_order_all" parent="menu_point_rep" />
+        <menuitem id="menu_report_pos_dairy_order" name="Dairy Sales Report" action="action_report_pos_daily_order_all" parent="menu_point_rep" />
+        
 
 
 </odoo>
