@@ -7,7 +7,7 @@
     'company': 'Fastworld Solutions',
     'website': 'http://www.fastworldsolutions.net',
     'category': 'Generic Modules/Point Of Sale',
-    'depends': ['stock_account', 'barcodes', 'web_editor'],
+    'depends': ['stock_account', 'barcodes', 'web_editor','point_of_sale'],
     'license': 'LGPL-3',
 	'application': True,
 	'data':[
